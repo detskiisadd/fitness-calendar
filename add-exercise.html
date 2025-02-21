@@ -1,0 +1,105 @@
+<!-- add-exercise.html -->
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Übung hinzufügen | Gym Progression Notes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"> 
+</head>
+<body>
+    <div class="header">
+        <header class="header-content">
+            <a href="{{ url_for('index') }}" class="logo">Gym Progression Notes</a>
+
+            <input type="checkbox" id="menu-toggle" class="menu-toggle">
+            <label for="menu-toggle" class="burger-menu">
+                <i class="bx bx-menu"></i> 
+            </label>
+
+            <nav class="navbar">
+                <a href="{{ url_for('index') }}">Home</a>
+                <a href="{{ url_for('track') }}">Track</a>
+                <a href="{{ url_for('history') }}">History</a>
+                <a href="{{ url_for('contact') }}">Contact</a>
+                <a href="{{ url_for('logout') }}" id="navbar-abmelden">Abmelden</a>
+            </nav>
+        </header>
+    </div>
+
+    <div id="add-exercise-container">
+        <div class="exercise-form-container">
+            <h2 id="add-exercise-h2">Übung hinzufügen</h2>
+            <form id="exerciseForm" class="form">
+                <div id="exerciseFields">
+                    <div class="exercise-block">
+                        <input type="text" name="name" class="exercise" placeholder="Übung" required>
+                        <input type="number" name="sets" class="sets" placeholder="Sätze" required>
+                        <input type="number" name="reps" class="reps" placeholder="Wiederholungen" required>
+                        <input type="number" name="weight" class="weight" placeholder="Gewicht (kg)" required>
+                        <input type="text" name="type" class="type" placeholder="Typ (z.B. Dropset)">
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn" onclick="addExerciseField()">Übung hinzufügen</button>
+                    <button type="button" class="btn" onclick="submitExercises()">Trainingseinheit abschließen</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="footer">
+        <footer class="home-footer">
+            <p>&copy; 2025 Denys Lysenko. Gym Progression Notes. Alle Rechte vorbehalten.</p>
+        </footer>
+    </div>
+
+    <script>
+        function addExerciseField() {
+            const exerciseFields = document.getElementById('exerciseFields');
+            const newExerciseBlock = document.createElement('div');
+            newExerciseBlock.classList.add('exercise-block');
+            newExerciseBlock.innerHTML = `
+                <input type="text" name="name" class="exercise" placeholder="Übung" required>
+                <input type="number" name="sets" class="sets" placeholder="Sätze" required>
+                <input type="number" name="reps" class="reps" placeholder="Wiederholungen" required>
+                <input type="number" name="weight" class="weight" placeholder="Gewicht (kg)" required>
+                <input type="text" name="type" class="type" placeholder="Typ (z.B. Dropset)">
+            `;
+            exerciseFields.appendChild(newExerciseBlock);
+        }
+
+        function submitExercises() {
+            const exerciseForm = document.getElementById('exerciseForm');
+            const formData = new FormData(exerciseForm);
+            const exercises = [];
+            for (let i = 0; i < formData.getAll('name').length; i++) {
+                exercises.push({
+                    name: formData.getAll('name')[i],
+                    sets: formData.getAll('sets')[i],
+                    reps: formData.getAll('reps')[i],
+                    weight: formData.getAll('weight')[i],
+                    type: formData.getAll('type')[i]
+                });
+            }
+
+            fetch(`/add_exercises/{{ training_id }}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ exercises: exercises })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = '/history';
+                } else {
+                    alert('Fehler beim Hinzufügen der Übungen');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

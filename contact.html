@@ -1,0 +1,64 @@
+<!-- templates/contact.html -->
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0 maximum-scale=1.0, minimum-scale=1.0">
+    <title>Kontakt | Gym Progression Notes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"> 
+</head>
+<body>
+    <div class="header">
+        <header class="header-content">
+            <a href="{{ url_for('index') }}" class="logo">Gym Progression Notes</a>
+
+            <input type="checkbox" id="menu-toggle" class="menu-toggle">
+            <label for="menu-toggle" class="burger-menu">
+                <i class="bx bx-menu"></i> 
+            </label>
+
+            <nav class="navbar">
+                <a href="{{ url_for('index') }}">Home</a>
+                <a href="{{ url_for('track') }}">Track</a>
+                <a href="{{ url_for('history') }}">History</a>
+                <a href="{{ url_for('contact') }}" class="active">Contact</a>
+                <a href="{{ url_for('logout') }}" id="navbar-abmelden">Abmelden</a>
+            </nav>
+        </header>
+    </div>
+
+    <div class="home">
+        <section class="home-content">
+            <h1>Kontaktieren Sie mich</h1>
+            <p>Wenn Sie Fragen haben, können Sie sich jederzeit an mich wenden.</p>
+            <p>Ich bin hier, um Ihnen zu helfen.</p>
+
+            <div class="contact-links">
+                <a href="mailto:denys.lysenko@myyahoo.com" class="btn" style="min-width: 150px; text-align: center;">
+                    <i class="bx bx-envelope"></i> Email
+                </a>
+                <a href="tel:+4915111069019" class="btn" style="min-width: 150px; text-align: center;">
+                    <i class="bx bx-phone"></i> Telefon
+                </a>
+                <a href="https://github.com/detskiisadd" class="btn" style="min-width: 150px; text-align: center;">
+                    <i class="bx bxl-github"></i> GitHub
+                </a>
+            </div>
+        </section>
+        <div class="home-image">
+            <div class="img-box">
+                <div class="img-item">
+                    <img src="{{ url_for('static', filename='src/personphoto.png') }}" alt="Personlisches Photo" class="home-img" id="person-img">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <footer class="home-footer">
+            <p>&copy; 2025 Denys Lysenko. Gym Progression Notes. Alle Rechte vorbehalten.</p>
+        </footer>
+    </div>
+</body>
+</html>

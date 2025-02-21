@@ -1,0 +1,54 @@
+<!-- templates/track.html -->
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track | Gym Progression Notes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"> 
+
+</head>
+<body>
+    <div class="header">
+        <header class="header-content">
+            <a href="{{ url_for('index') }}" class="logo">Gym Progression Notes</a>
+
+            <input type="checkbox" id="menu-toggle" class="menu-toggle">
+            <label for="menu-toggle" class="burger-menu">
+                <i class="bx bx-menu"></i> 
+            </label>
+
+            <nav class="navbar">
+                <a href="{{ url_for('index') }}">Home</a>
+                <a href="{{ url_for('track') }}" class="active">Track</a>
+                <a href="{{ url_for('history') }}">History</a>
+                <a href="{{ url_for('contact') }}">Contact</a>
+                <a href="{{ url_for('logout') }}" id="navbar-abmelden">Abmelden</a>
+            </nav>
+        </header>
+    </div>
+
+    <div class="dashboard-container-track">
+        <div class="dashboard-h2">
+            <h2 id="track-h2">Neue Trainingseinheit hinzufügen</h2>
+        </div>
+
+        <form id="trainingForm" class="form" action="{{ url_for('add_training') }}" method="POST">
+            <div class="dashboard-link">
+                <input type="date" name="trainingDate" id="trainingDate" required>
+            </div>
+
+            <div class="dashboard-btn">
+                <button type="submit" class="btn">Trainingseinheit hinzufügen</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="footer">
+        <footer class="home-footer">
+            <p>&copy; 2025 Denys Lysenko. Gym Progression Notes. Alle Rechte vorbehalten.</p>
+        </footer>
+    </div>
+</body>
+</html>

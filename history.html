@@ -1,0 +1,159 @@
+<!-- templates/history.html -->
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History | Gym Progression Notes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"> 
+</head>
+<body>
+    <div class="header">
+        <header class="header-content">
+            <a href="{{ url_for('index') }}" class="logo">Gym Progression Notes</a>
+
+            <input type="checkbox" id="menu-toggle" class="menu-toggle">
+            <label for="menu-toggle" class="burger-menu">
+                <i class="bx bx-menu"></i> 
+            </label>
+
+            <nav class="navbar">
+                <a href="{{ url_for('index') }}">Home</a>
+                <a href="{{ url_for('track') }}">Track</a>
+                <a href="{{ url_for('history') }}" class="active">History</a>
+                <a href="{{ url_for('contact') }}">Contact</a>
+                <a href="{{ url_for('logout') }}" id="navbar-abmelden">Abmelden</a>
+            </nav>
+        </header>
+    </div>
+
+    <div class="dashboard-container">
+        <h2 id="history-h2">Trainingshistorie</h2>
+        <div class="trainings-history">
+            {% for training in trainings %}
+            <div class="training-block" data-training-id="{{ training.id }}">
+                <div class="training-header">
+                    <h3>Training vom {{ training.date }}</h3>
+                    <div class="training-actions">
+                        <a href="#" class="icon edit-icon" onclick="editTraining({{ training.id }})"><i class="bx bx-pencil"></i></a>
+                        <a href="#" class="icon delete-icon" onclick="deleteTraining({{ training.id }})"><i class="bx bx-trash"></i></a>
+                    </div>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Übung</th>
+                            <th>Sätze</th>
+                            <th>Wiederholungen</th>
+                            <th>Gewicht (kg)</th>
+                            <th>Typ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for exercise in training.exercises %}
+                        <tr data-exercise-id="{{ exercise.id }}">
+                            <td contenteditable="true" onblur="updateExercise({{ exercise.id }}, 'name', this.textContent)">{{ exercise.name }}</td>
+                            <td contenteditable="true" onblur="updateExercise({{ exercise.id }}, 'sets', this.textContent)">{{ exercise.sets }}</td>
+                            <td contenteditable="true" onblur="updateExercise({{ exercise.id }}, 'reps', this.textContent)">{{ exercise.reps }}</td>
+                            <td contenteditable="true" onblur="updateExercise({{ exercise.id }}, 'weight', this.textContent)">{{ exercise.weight }}</td>
+                            <td contenteditable="true" onblur="updateExercise({{ exercise.id }}, 'type', this.textContent)">{{ exercise.type }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="footer">
+        <footer class="home-footer">
+            <p>&copy; 2025 Denys Lysenko. Gym Progression Notes. Alle Rechte vorbehalten.</p>
+        </footer>
+    </div>
+
+    <script>
+        function updateExercise(exerciseId, field, value) {
+            fetch(`/update_exercise/${exerciseId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ field: field, value: value })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success) {
+                    alert('Fehler beim Aktualisieren der Übung');
+                }
+            });
+        }
+
+        function editTraining(trainingId) {
+            const trainingBlock = document.querySelector(`.training-block[data-training-id="${trainingId}"]`);
+            const trainingHeader = trainingBlock.querySelector('.training-header h3');
+            const originalDate = trainingHeader.textContent.replace('Training vom ', '');
+
+            const newDate = prompt('Geben Sie einen neuen Trainingstermin ein (YYYY-MM-DD):', originalDate);
+            if (newDate) {
+                fetch(`/edit_training/${trainingId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ date: newDate })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        trainingHeader.textContent = `Training vom ${newDate}`;
+                    } else {
+                        alert('Fehler beim Aktualisieren des Trainings');
+                    }
+                });
+            }
+        }
+
+        function deleteTraining(trainingId) {
+            if (confirm('Sind Sie sicher, dass Sie dieses Training löschen möchten?')) {
+                fetch(`/delete_training/${trainingId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.querySelector(`.training-block[data-training-id="${trainingId}"]`).remove();
+                    } else {
+                        alert('Fehler beim Löschen des Trainings');
+                    }
+                });
+            }
+        }
+
+        function removeEmptyRows() {
+            const tables = document.querySelectorAll('.table tbody');
+            tables.forEach(tbody => {
+                const rows = tbody.querySelectorAll('tr');
+                rows.forEach(row => {
+                    const cells = row.querySelectorAll('td');
+                    let isEmpty = true;
+                    cells.forEach(cell => {
+                        if (cell.textContent.trim() !== '') {
+                            isEmpty = false;
+                        }
+                    });
+                    if (isEmpty) {
+                        row.remove();
+                    }
+                });
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', removeEmptyRows);
+    </script>
+</body>
+</html>

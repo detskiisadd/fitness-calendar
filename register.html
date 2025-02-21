@@ -1,0 +1,47 @@
+<!-- /templates/register.html -->
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrierung | Gym Progression Notes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"> <!-- Boxicons -->
+</head>
+<body>
+    <div class="header">
+        <header class="header-content">
+            <a href="{{ url_for('index') }}" class="logo">Gym Progression Notes</a>
+
+            <input type="checkbox" id="menu-toggle" class="menu-toggle">
+            <label for="menu-toggle" class="burger-menu">
+                <i class="bx bx-menu"></i>
+            </label>
+
+            <nav class="navbar">
+                <a href="{{ url_for('index') }}">Home</a>
+                <a href="{{ url_for('track') }}">Track</a>
+                <a href="{{ url_for('history') }}">History</a>
+                <a href="{{ url_for('contact') }}">Contact</a>
+                <a href="{{ url_for('logout') }}" id="navbar-abmelden">Abmelden</a>
+            </nav>
+        </header>
+    </div>
+
+    <div class="register-container">
+        <h2>Registrierung</h2>
+        <form class="register-form" method="POST" action="{{ url_for('register') }}">
+            <input type="text" id="register-username" name="username" placeholder="Benutzername" required>
+            <input type="password" id="register-password" name="password" placeholder="Passwort" required>
+            <button type="submit" class="btn">Registrieren</button>
+        </form>
+        <p>Bereits registriert? <a href="{{ url_for('login') }}">Anmelden.</a></p>
+    </div>
+
+    <div class="footer">
+        <footer class="home-footer">
+            <p>&copy; 2025 Denys Lysenko. Gym Progression Notes. Alle Rechte vorbehalten.</p>
+        </footer>
+    </div>
+</body>
+</html>
